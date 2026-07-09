@@ -12,7 +12,6 @@ import userRoutes from "./routes/userRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // --------------- Middleware ---------------
 app.use(
@@ -47,12 +46,21 @@ app.use("/api/payment", paymentRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-// --------------- Start ---------------
-const start = async () => {
-  await connectDB();
+// --------------- DB Connection ---------------
+// Connect at module load time so the connection is reused across
+// warm Vercel serverless function invocations.
+connectDB();
+
+// --------------- Local dev only ---------------
+// In a Vercel serverless environment, app.listen() must NOT be called.
+// This block is skipped when Vercel imports this module as a function handler.
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5001;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT} (${process.env.NODE_ENV || "development"})`);
   });
-};
+}
 
-start();
+// Export the Express app as the default export for Vercel
+export default app;
+
