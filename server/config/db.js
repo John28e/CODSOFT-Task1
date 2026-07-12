@@ -13,7 +13,7 @@ const connectDB = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI, {
       // Recommended settings for serverless environments
-      bufferCommands: false,
+      bufferCommands: true,
       maxPoolSize: 10,
     });
     isConnected = conn.connection.readyState === 1;
