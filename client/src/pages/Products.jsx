@@ -6,6 +6,7 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("all");
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("newest");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +19,9 @@ export default function Products() {
         }
         if (search.trim()) {
           queryParams.append("search", search.trim());
+        }
+        if (sort !== "newest") {
+          queryParams.append("sort", sort);
         }
         const response = await api.get(`/products?${queryParams.toString()}`);
         setProducts(response.data.products || []);
@@ -33,7 +37,7 @@ export default function Products() {
     }, 300);
 
     return () => clearTimeout(delayDebounce);
-  }, [category, search]);
+  }, [category, search, sort]);
 
   const categories = [
     { label: "All", value: "all" },
@@ -56,7 +60,7 @@ export default function Products() {
           </h1>
         </div>
 
-        {/* Filters and Search */}
+        {/* Filters, Sort and Search */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <input
             type="text"
@@ -65,6 +69,17 @@ export default function Products() {
             onChange={(e) => setSearch(e.target.value)}
             className="border-b border-edge py-1.5 text-xs text-fg uppercase tracking-[0.15em] focus:border-accent focus:outline-none transition-colors w-full sm:w-48"
           />
+
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            className="bg-transparent border border-edge text-[10px] text-fg-secondary uppercase tracking-[0.15em] py-1.5 px-3 rounded-sm focus:outline-none focus:border-accent cursor-pointer transition-colors"
+          >
+            <option value="newest" className="bg-black text-fg">Newest First</option>
+            <option value="price-asc" className="bg-black text-fg">Price: Low to High</option>
+            <option value="price-desc" className="bg-black text-fg">Price: High to Low</option>
+            <option value="rating-desc" className="bg-black text-fg">Highest Rated</option>
+          </select>
 
           <div className="flex gap-3">
             {categories.map((cat) => (
@@ -112,6 +127,7 @@ export default function Products() {
             onClick={() => {
               setCategory("all");
               setSearch("");
+              setSort("newest");
             }}
             className="inline-block text-xs uppercase tracking-[0.15em] text-accent hover:underline mt-6 cursor-pointer"
           >
@@ -138,9 +154,17 @@ export default function Products() {
                 <h3 className="font-heading text-xs uppercase tracking-tight text-fg truncate">
                   {product.name}
                 </h3>
-                <p className="text-fg-secondary text-xs mt-1 font-mono">
-                  ${product.price.toFixed(2)}
-                </p>
+                <div className="flex justify-between items-center mt-1">
+                  <p className="text-fg-secondary text-xs font-mono">
+                    ${product.price.toFixed(2)}
+                  </p>
+                  {product.rating > 0 && (
+                    <div className="flex items-center gap-0.5 text-[9px] text-accent">
+                      <span>★</span>
+                      <span className="text-fg-muted font-mono text-[9px]">{product.rating.toFixed(1)}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </Link>
           ))}
@@ -149,3 +173,4 @@ export default function Products() {
     </section>
   );
 }
+
