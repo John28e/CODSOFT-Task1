@@ -27,6 +27,14 @@
       "dest": "/client/images/$1"
     },
     {
+      "src": "/videos/(.*)",
+      "dest": "/client/videos/$1"
+    },
+    {
+      "src": "/icons.svg",
+      "dest": "/client/icons.svg"
+    },
+    {
       "handle": "filesystem"
     },
     {
