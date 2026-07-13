@@ -58,3 +58,31 @@ export const adminOnly = (req, res, next) => {
   res.status(403);
   next(new Error("Forbidden — admin access required"));
 };
+
+/**
+ * optionalProtect — Decodes user session if token exists, but doesn't block request if missing or expired.
+ */
+export const optionalProtect = async (req, res, next) => {
+  try {
+    let token;
+
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.id);
+      if (user) {
+        req.user = user;
+      }
+    }
+  } catch (error) {
+    // Silently continue for optional authentication
+  }
+  next();
+};
+

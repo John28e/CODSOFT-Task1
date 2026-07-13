@@ -29,6 +29,9 @@ export default function Navbar() {
           <NavLink to="/products" className={linkClass}>
             Shop
           </NavLink>
+          <NavLink to="/support" className={linkClass}>
+            Support
+          </NavLink>
           <NavLink to="/cart" className={linkClass}>
             <span className="relative">
               Cart
@@ -95,6 +98,13 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
           >
             Shop
+          </NavLink>
+          <NavLink
+            to="/support"
+            className={linkClass}
+            onClick={() => setOpen(false)}
+          >
+            Support
           </NavLink>
           <NavLink
             to="/cart"

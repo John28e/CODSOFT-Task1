@@ -40,6 +40,14 @@ export default function Footer() {
                   Cart
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/support"
+                  className="text-sm text-fg-muted hover:text-fg transition-colors"
+                >
+                  Support
+                </Link>
+              </li>
             </ul>
           </div>
 
