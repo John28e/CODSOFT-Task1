@@ -2,8 +2,11 @@
   "version": 2,
   "builds": [
     {
-      "src": "client/dist/**",
-      "use": "@vercel/static"
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     },
     {
       "src": "server/server.js",
@@ -16,11 +19,27 @@
       "dest": "server/server.js"
     },
     {
+      "src": "/assets/(.*)",
+      "dest": "client/assets/$1"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "client/images/$1"
+    },
+    {
+      "src": "/videos/(.*)",
+      "dest": "client/videos/$1"
+    },
+    {
+      "src": "/icons.svg",
+      "dest": "client/icons.svg"
+    },
+    {
       "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/client/dist/index.html"
+      "dest": "client/index.html"
     }
   ]
 }
